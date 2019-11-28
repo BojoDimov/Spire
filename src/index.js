@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import logoImg from "./assets/logo.png";
+import { Player } from './player/player';
 
 const config = {
   type: Phaser.AUTO,
@@ -7,26 +8,32 @@ const config = {
   width: 800,
   height: 600,
   scene: {
-    preload: preload,
-    create: create
+    create,
+    update
   }
 };
 
-const game = new Phaser.Game(config);
+const keys = {}
 
-function preload() {
-  this.load.image("logo", logoImg);
-}
+const game = new Phaser.Game(config);
+const player = new Player();
+let graphics
 
 function create() {
-  const logo = this.add.image(400, 150, "logo");
+  graphics = this.add.graphics();
+  keys['W'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+  keys['A'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+  keys['S'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+  keys['D'] = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+}
 
-  this.tweens.add({
-    targets: logo,
-    y: 450,
-    duration: 2000,
-    ease: "Power2",
-    yoyo: true,
-    loop: -1
-  });
+function clear() {
+  graphics.fillStyle(0x000000);
+  graphics.fillRect(0, 0, 800, 600);
+}
+
+function update() {
+  clear();
+  player.move(keys);
+  player.draw(graphics);
 }
