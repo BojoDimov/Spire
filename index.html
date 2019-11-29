@@ -1,12 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible"
+        content="ie=edge">
   <title>Spire</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    #canvas {
+      background-color: rgb(49, 46, 46);
+      grid-row-start: 1;
+      grid-row-end: 3;
+    }
+
+    html {
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="canvas"></div>
+  <div id="actions"></div>
+  <div id="log"></div>
 </body>
 
 </html>
