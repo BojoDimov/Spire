@@ -1,53 +1,40 @@
 import * as THREE from 'three';
+import velocity from '../lib/velocity';
+import { range } from '../lib/util';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 55;
+camera.position.y = 30;
+camera.position.x = 0;
+camera.lookAt(new THREE.Vector3(0, 0, -5));
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ color: 0x4BDCFF });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-renderer.setClearColor(new THREE.Color(49, 46, 46), 1);
 
-camera.position.z = 5;
-let velX = 0;
-let velY = 0;
+const cubes = range(1, 1024)
+  .map((_, index, arr: number[]) => {
+    let obj = new THREE.Mesh(geometry, material);
+    obj.position.x = index % Math.sqrt(arr.length) * 2 - Math.sqrt(arr.length);
+    obj.position.z = index / Math.sqrt(arr.length) * 2 - Math.sqrt(arr.length);
+    return obj;
+  });
+
+scene.add(...cubes);
+
 
 function main() {
   requestAnimationFrame(main);
-  if (velX > 0)
-    velX -= .01;
-  if (velX < 0)
-    velX += .01;
-
-  cube.position.x += .1 * velX;
   renderer.render(scene, camera);
 }
 
 main();
 
-document.addEventListener('keydown', keyboardManager);
+// document.addEventListener('keydown', keyboardManager);
 
-let lastKey = null;
-
-function keyboardManager(input: KeyboardEvent) {
-  if (input.code === 'KeyA') {
-    //cube.position.x += 0.1 * velX;
-    if (lastKey === 'KeyA')
-      velX -= .1;
-    else
-      velX -= .5;
-    lastKey = 'KeyA';
-  }
-  if (input.code === 'KeyD') {
-    //cube.position.x += 0.1 * velX;
-    if (lastKey === 'KeyD')
-      velX += .1;
-    else
-      velX += .5;
-    lastKey = 'KeyD';
-  }
-}
+// function keyboardManager(inputEvent: KeyboardEvent) {
+// }
