@@ -3,6 +3,7 @@ import velocity from '../lib/velocity';
 import { range } from '../lib/util';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { LightWithBody } from '../lib/light';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const scene = new THREE.Scene();
@@ -10,6 +11,11 @@ scene.background = new THREE.Color('#261934');
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const controls = new OrbitControls(camera, renderer.domElement);
 const stats = new Stats();
+
+
+const light = new LightWithBody(2, 150);//new THREE.PointLight(0xffffff, 25, 100);
+light.setPosition(0, 20, 0);
+scene.add(...light.objects());
 
 camera.position.z = 55;
 camera.position.y = 30;
@@ -21,13 +27,13 @@ document.body.appendChild(renderer.domElement);
 document.body.appendChild(stats.dom);
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x4BDCFF });
+const material = new THREE.MeshLambertMaterial({ color: 0x4BDCFF });
 
 const cubes = range(1, 1024)
   .map((_, index, arr: number[]) => {
     let obj = new THREE.Mesh(geometry, material);
-    obj.position.x = index % Math.sqrt(arr.length) * 2 - Math.sqrt(arr.length);
-    obj.position.z = index / Math.sqrt(arr.length) * 2 - Math.sqrt(arr.length);
+    obj.position.x = (index % Math.sqrt(arr.length)) * 2 - Math.sqrt(arr.length) + 1;
+    obj.position.z = Math.floor(index / Math.sqrt(arr.length)) * 2 - Math.sqrt(arr.length) + 1;
     return obj;
   });
 
